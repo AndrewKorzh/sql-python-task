@@ -1,9 +1,12 @@
 import random
 import string
+import math
 import json
 
 from db_handler import DBHandler
 from config import DB_PATH
+
+ROUND_DIGITS = 2
 
 
 def generate_random_color():
@@ -14,7 +17,6 @@ def generate_random_color():
     return f"#{r:02x}{g:02x}{b:02x}"
 
 
-# Важно - отдельные функции для генерации, отдельные для вставки
 class DBFiller:
     def __init__(self, db_file):
         self.db_handler = DBHandler(db_file=db_file)
@@ -33,7 +35,7 @@ class DBFiller:
 
     def gen_field(
         self,
-        figures_amount=12,
+        figures_amount=10,
         scale_min=1,
         scale_max=10,
         x_start_min=-5,
@@ -59,18 +61,23 @@ class DBFiller:
                     "id": f_index,
                     "figure_id": random.choice(figures_ids),
                     "color_id": random.choice(color_ids),
-                    "scale": random.uniform(scale_min, scale_max),
-                    "x_start": random.uniform(x_start_min, x_start_max),
-                    "y_start": random.uniform(y_start_min, y_start_max),
+                    "scale": round(random.uniform(scale_min, scale_max), ROUND_DIGITS),
+                    "x_start": round(
+                        random.uniform(x_start_min, x_start_max), ROUND_DIGITS
+                    ),
+                    "y_start": round(
+                        random.uniform(y_start_min, y_start_max), ROUND_DIGITS
+                    ),
                 }
             )
 
         self.db_handler.create_table_whith_data(
-            "field",
+            "figures_on_field",
             figures,
             primary_key="id",
             foreign_keys=[
                 {"column": "figure_id", "ref_table": "figures", "ref_column": "id"},
+                {"column": "figure_id", "ref_table": "vertices", "ref_column": "id"},
                 {"column": "color_id", "ref_table": "colors", "ref_column": "id"},
             ],
             column_types={
@@ -88,7 +95,6 @@ class DBFiller:
     def add_random_figures(
         self,
         figures_amount=5,
-        vertices_amount=5,
     ):
 
         figures = []
@@ -97,11 +103,12 @@ class DBFiller:
         vert_count = 0
 
         for f_index in range(figures_amount):
-            for vert in range(vertices_amount):
-                if vert == 0:
-                    x, y = 0, 0
-                else:
-                    x, y = random.uniform(0, 1), random.uniform(0, 1)
+            sides = f_index + 3
+            radius = 0.5
+            for vert in range(sides):
+                angle = 360 / sides * vert
+                x = radius * math.cos(math.radians(angle))
+                y = radius * math.sin(math.radians(angle))
 
                 point = {
                     "id": vert_count,

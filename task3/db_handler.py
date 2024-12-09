@@ -97,6 +97,52 @@ class DBHandler:
         values = cursor.fetchall()
         return [value[0] for value in values]
 
+    @with_db_connection
+    def get_all_field_polygons(self, cursor: Cursor):
+        query = """
+            SELECT 
+                fof.scale,
+                fof.x_start,
+                fof.y_start,
+                c.hex AS color,
+                GROUP_CONCAT('(' || v.x || ',' || v.y || ')' ORDER BY v.vert_order) AS points
+            FROM 
+                figures_on_field fof
+            JOIN 
+                colors c ON fof.color_id = c.id
+            JOIN 
+                vertices v ON fof.figure_id = v.figure_id
+            GROUP BY 
+                fof.scale, fof.x_start, fof.y_start, c.hex;
+            """
+
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        polygons = []
+        for row in rows:
+            scale, x_start, y_start, color, points = row
+
+            # Убираем скобки и разбиваем по запятой
+            points_list = [
+                tuple(map(float, point.strip("()").split(",")))
+                for point in points.split("),(")
+            ]
+
+            polygons.append(
+                {
+                    "scale": scale,
+                    "x_start": x_start,
+                    "y_start": y_start,
+                    "color": color,
+                    "points": points_list,
+                }
+            )
+
+        return polygons
+
+    # Добавить возможность добавить данные, не перезаписывая всё
+
 
 if __name__ == "__main__":
     dbh = DBHandler(db_file=DB_PATH)
@@ -109,22 +155,3 @@ if __name__ == "__main__":
     ]
     dbh.create_table_whith_data(table_name="figures", data=data)
     dbh.show_db()
-
-    # data = [
-    #     {"id": 1, "name": "John", "age": 30},
-    #     {"id": 2, "name": "Alice", "age": 25},
-    # ]
-# cursor.execute(
-#     """
-#     CREATE TABLE figures (
-#         figure_id INTEGER PRIMARY KEY AUTOINCREMENT,
-#         shape_name TEXT NOT NULL,
-#         color TEXT NOT NULL,
-#         x_center REAL NOT NULL,
-#         y_center REAL NOT NULL
-#     )
-# """
-# )
-
-# conn.commit()
-# conn.close()
