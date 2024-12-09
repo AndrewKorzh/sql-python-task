@@ -11,9 +11,9 @@ if __name__ == "__main__":
     dbh = DBHandler(db_file=DB_PATH)
 
     dbf.add_random_collors(amount=10)
-    dbf.add_random_figures(figures_amount=10)
+    dbf.add_random_figures(figures_amount=3)
     dbf.gen_field(
-        figures_amount=20,
+        figures_amount=10,
         scale_min=1,
         scale_max=3,
     )
