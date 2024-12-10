@@ -96,7 +96,7 @@ class DBHandler:
         return values
 
     @with_db_connection
-    def department_employee_less_then(self, cursor: Cursor, amount):
+    def department_employee_not_more_then(self, cursor: Cursor, amount):
         query = f"""
             SELECT 
                 DEPARTMENT_ID

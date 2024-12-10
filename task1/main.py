@@ -43,9 +43,9 @@ if __name__ == "__main__":
 
     employee_amount = 3
     print_response(
-        response=dbh.department_employee_less_then(amount=employee_amount),
+        response=dbh.department_employee_not_more_then(amount=employee_amount),
         info=[
-            f"department_employee_less_then {employee_amount}",
+            f"department_employee_not_more_then {employee_amount}",
             "department_id |",
         ],
     )
