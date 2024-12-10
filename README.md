@@ -13,13 +13,13 @@
 
 ![Task1 DB]( docs/img/task1_db.jpg)
 
-Пример сгенерированных данных
+Пример сгенерированных данных:
 
 ![Task1 Generated Data Employee]( docs/img/task1_employee_data.jpg)
 
 ![Task1 Generated Data Department]( docs/img/task1_department_data.jpg)
 
-Результат запросов
+Результат запросов:
 
 ![Task1 Requests Result]( docs/img/task1_requests_results.jpg)
 

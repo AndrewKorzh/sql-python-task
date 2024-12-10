@@ -26,9 +26,9 @@ if __name__ == "__main__":
     dbh.show_db()
 
     print_response(
-        response=dbh.salary_more_then_chief(),
+        response=dbh.salary_more_than_chief(),
         info=[
-            "salary_more_then_chief",
+            "salary_more_than_chief",
             "employee_id | employee_name | emloyee_sallary | chief_name | chief_sallary",
         ],
     )
@@ -43,9 +43,9 @@ if __name__ == "__main__":
 
     employee_amount = 3
     print_response(
-        response=dbh.department_employee_not_more_then(amount=employee_amount),
+        response=dbh.department_employee_not_more_than(amount=employee_amount),
         info=[
-            f"department_employee_not_more_then {employee_amount}",
+            f"department_employee_not_more_than {employee_amount}",
             "department_id |",
         ],
     )
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     print_response(
         response=dbh.no_chief_at_same_department(),
         info=[
-            "no_chief_at_same_department,"
+            "no_chief_at_same_department",
             "employee_id | employee_name | department_id",
         ],
     )

@@ -43,7 +43,7 @@ class DBHandler:
         return [value[0] for value in values]
 
     @with_db_connection
-    def salary_more_then_chief(self, cursor: Cursor):
+    def salary_more_than_chief(self, cursor: Cursor):
         query = """
             SELECT 
                 e1.ID AS Employee_ID,
@@ -96,7 +96,7 @@ class DBHandler:
         return values
 
     @with_db_connection
-    def department_employee_not_more_then(self, cursor: Cursor, amount):
+    def department_employee_not_more_than(self, cursor: Cursor, amount):
         query = f"""
             SELECT 
                 DEPARTMENT_ID
