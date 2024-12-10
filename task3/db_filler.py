@@ -121,7 +121,7 @@ class DBFiller:
             figures.append(
                 {
                     "id": f_index,
-                    "figure_name": "".join(random.choices(string.ascii_letters, k=5)),
+                    "name": "".join(random.choices(string.ascii_letters, k=5)),
                 }
             )
 
