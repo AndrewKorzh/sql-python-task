@@ -1,17 +1,19 @@
-import json
-
-from config import DB_PATH
 from db_handler import DBHandler
 from db_filler import DBFiller
 from polygon_visualizer import PolygonVisualizer
 
 
 if __name__ == "__main__":
-    dbf = DBFiller(db_file=DB_PATH)
-    dbh = DBHandler(db_file=DB_PATH)
+    db_file = "figures.db"
+    dbf = DBFiller(db_file=db_file)
+    dbh = DBHandler(db_file=db_file)
 
-    dbf.add_random_collors(amount=10)
-    dbf.add_random_figures(figures_amount=3)
+    dbf.add_random_collors(
+        amount=4,
+    )
+    dbf.add_random_figures(
+        figures_amount=4,
+    )
     dbf.gen_field(
         figures_amount=10,
         scale_min=1,

@@ -1,8 +1,6 @@
 from functools import wraps
-import json
 import sqlite3
 from sqlite3 import Cursor
-from config import DB_PATH
 
 
 def with_db_connection(func):
@@ -58,7 +56,7 @@ class DBHandler:
             return
 
         columns = data[0].keys()
-        column_defs = []  # f"{col} TEXT" for col in columns
+        column_defs = []
 
         for col in columns:
             col_type = column_types.get(col, "TEXT")
@@ -102,8 +100,8 @@ class DBHandler:
         query = """
             SELECT 
                 fof.scale,
-                fof.x_start,
-                fof.y_start,
+                fof.x_offset,
+                fof.y_offset,
                 c.hex AS color,
                 GROUP_CONCAT('(' || v.x || ',' || v.y || ')' ORDER BY v.vert_order) AS points
             FROM 
@@ -113,7 +111,7 @@ class DBHandler:
             JOIN 
                 vertices v ON fof.figure_id = v.figure_id
             GROUP BY 
-                fof.scale, fof.x_start, fof.y_start, c.hex;
+                fof.scale, fof.x_offset, fof.y_offset, c.hex;
             """
 
         cursor.execute(query)
@@ -121,9 +119,8 @@ class DBHandler:
 
         polygons = []
         for row in rows:
-            scale, x_start, y_start, color, points = row
+            scale, x_offset, y_offset, color, points = row
 
-            # Убираем скобки и разбиваем по запятой
             points_list = [
                 tuple(map(float, point.strip("()").split(",")))
                 for point in points.split("),(")
@@ -132,26 +129,11 @@ class DBHandler:
             polygons.append(
                 {
                     "scale": scale,
-                    "x_start": x_start,
-                    "y_start": y_start,
+                    "x_offset": x_offset,
+                    "y_offset": y_offset,
                     "color": color,
                     "points": points_list,
                 }
             )
 
         return polygons
-
-    # Добавить возможность добавить данные, не перезаписывая всё
-
-
-if __name__ == "__main__":
-    dbh = DBHandler(db_file=DB_PATH)
-    dbh.show_db()
-    dbh.clear_db()
-    dbh.show_db()
-    data = [
-        {"id": 5, "figure": "triangle", "size": 5},
-        {"id": 6, "figure": "sqere", "size": 10},
-    ]
-    dbh.create_table_whith_data(table_name="figures", data=data)
-    dbh.show_db()

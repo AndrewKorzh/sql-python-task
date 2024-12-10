@@ -1,10 +1,8 @@
 import random
 import string
 import math
-import json
 
 from db_handler import DBHandler
-from config import DB_PATH
 
 ROUND_DIGITS = 2
 
@@ -38,10 +36,10 @@ class DBFiller:
         figures_amount=10,
         scale_min=1,
         scale_max=10,
-        x_start_min=-5,
-        x_start_max=5,
-        y_start_min=-5,
-        y_start_max=5,
+        x_offset_min=-5,
+        x_offset_max=5,
+        y_offset_min=-5,
+        y_offset_max=5,
     ):
         figures = []
 
@@ -62,11 +60,11 @@ class DBFiller:
                     "figure_id": random.choice(figures_ids),
                     "color_id": random.choice(color_ids),
                     "scale": round(random.uniform(scale_min, scale_max), ROUND_DIGITS),
-                    "x_start": round(
-                        random.uniform(x_start_min, x_start_max), ROUND_DIGITS
+                    "x_offset": round(
+                        random.uniform(x_offset_min, x_offset_max), ROUND_DIGITS
                     ),
-                    "y_start": round(
-                        random.uniform(y_start_min, y_start_max), ROUND_DIGITS
+                    "y_offset": round(
+                        random.uniform(y_offset_min, y_offset_max), ROUND_DIGITS
                     ),
                 }
             )
@@ -84,8 +82,8 @@ class DBFiller:
                 "id": "INTEGER",
                 "figure_id": "INTEGER",
                 "color_id": "INTEGER",
-                "x_start": "REAL",
-                "y_start": "REAL",
+                "x_offset": "REAL",
+                "y_offset": "REAL",
                 "scale": "REAL",
             },
         )
@@ -154,12 +152,3 @@ class DBFiller:
                 "vert_order": "INTEGER",
             },
         )
-
-
-if __name__ == "__main__":
-    dbf = DBFiller(db_file=DB_PATH)
-    dbf.add_random_collors()
-
-    dbf.add_random_figures()
-
-    dbf.gen_field()
